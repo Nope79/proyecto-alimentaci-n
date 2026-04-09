@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".DetalleEncuestaActivity" />
         <activity android:name=".HistorialActivity" />
     </application>
 

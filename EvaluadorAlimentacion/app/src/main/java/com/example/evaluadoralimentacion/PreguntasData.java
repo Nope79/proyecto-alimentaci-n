@@ -43,6 +43,13 @@ public class PreguntasData {
                 new int[]{0, 2, 5, 8}
         ));
 
+        for (int i = 6; i <= 30; i++) {
+            preguntas.add(new Pregunta(
+                    i + ". [Tu pregunta aquí]",
+                    new String[]{"Opción A", "Opción B", "Opción C", "Opción D"},
+                    new int[]{0, 2, 4, 6}
+            ));
+        }
 
         return preguntas;
     }

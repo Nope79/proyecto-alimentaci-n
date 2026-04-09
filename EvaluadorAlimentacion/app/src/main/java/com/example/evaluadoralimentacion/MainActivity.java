@@ -124,30 +124,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void finalizarEncuesta() {
-        // Calcular puntaje total
+        // Calcular puntaje total y recopilar detalles
         int puntajeTotal = 0;
         int maxPuntaje = 0;
+        List<String> textosRespuestas = new ArrayList<>();
+        List<Integer> puntajesObtenidos = new ArrayList<>();
 
         for (int i = 0; i < preguntas.size(); i++) {
             int respuestaIdx = respuestas.get(i);
+            Pregunta pregunta = preguntas.get(i);
+
             if (respuestaIdx != -1) {
-                int[] puntajes = preguntas.get(i).getPuntajes();
+                int[] puntajes = pregunta.getPuntajes();
                 if (respuestaIdx < puntajes.length) {
-                    puntajeTotal += puntajes[respuestaIdx];
+                    int puntajePregunta = puntajes[respuestaIdx];
+                    puntajeTotal += puntajePregunta;
+                    puntajesObtenidos.add(puntajePregunta);
+
+                    // Guardar texto de la respuesta seleccionada
+                    String textoRespuesta = pregunta.getOpciones()[respuestaIdx];
+                    textosRespuestas.add(textoRespuesta);
                 }
                 maxPuntaje += puntajes[0]; // asumiendo orden ascendente
+            } else {
+                // Por si acaso, aunque ya siempre hay respuesta seleccionada
+                puntajesObtenidos.add(0);
+                textosRespuestas.add("No respondida");
             }
         }
 
         String clasificacion = PreguntasData.clasificarAlimentacion(puntajeTotal, maxPuntaje);
 
-        // Guardar encuesta
+        // Guardar encuesta con todos los detalles
         Encuesta encuesta = new Encuesta(
                 System.currentTimeMillis(),
                 new Date(),
                 new ArrayList<>(respuestas),
                 puntajeTotal,
-                clasificacion
+                maxPuntaje,
+                clasificacion,
+                textosRespuestas,
+                puntajesObtenidos
         );
         storage.agregarEncuesta(encuesta);
 
@@ -162,17 +179,8 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage(resultado + "\n\n¿Qué deseas hacer?")
                 .setPositiveButton("Nueva encuesta", (dialog, which) -> reiniciarEncuesta())
                 .setNegativeButton("Ver historial", (dialog, which) -> {
-                    // Abrir historial
-                    try {
-                        Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        // Si hay error, muestra mensaje
-                        Toast.makeText(MainActivity.this,
-                                "Error: Historial no disponible aún",
-                                Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
+                    Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
+                    startActivity(intent);
                 })
                 .show();
     }
