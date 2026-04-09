@@ -42,4 +42,10 @@ public class EncuestaStorage {
         encuestas.add(encuesta);
         guardarEncuestas(encuestas);
     }
+
+    // NUEVO MÉTODO: Limpiar todo el historial
+    public void limpiarHistorial() {
+        sharedPreferences.edit().remove(KEY_ENCUESTAS).apply();
+        // O también: guardarEncuestas(new ArrayList<>());
+    }
 }
