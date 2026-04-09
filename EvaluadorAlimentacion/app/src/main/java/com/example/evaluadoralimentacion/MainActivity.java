@@ -1,13 +1,6 @@
 package com.example.evaluadoralimentacion;
 
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -40,8 +33,16 @@ public class MainActivity extends AppCompatActivity {
         cargarPregunta();
 
         btnVerHistorial.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                // Si hay error, muestra mensaje
+                Toast.makeText(MainActivity.this,
+                        "Error: Historial no disponible aún",
+                        Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         });
     }
 
@@ -91,15 +92,23 @@ public class MainActivity extends AppCompatActivity {
         // Limpiar y crear opciones
         rgOpciones.removeAllViews();
         String[] opciones = p.getOpciones();
+
         for (int i = 0; i < opciones.length; i++) {
             RadioButton rb = new RadioButton(this);
             rb.setText(opciones[i]);
             rb.setId(View.generateViewId());
             rgOpciones.addView(rb);
 
-            // Restaurar respuesta guardada
-            if (respuestas.get(preguntaActual) == i) {
+            // Restaurar respuesta guardada O seleccionar primera opción si no hay respuesta
+            Integer respuestaGuardada = respuestas.get(preguntaActual);
+            if (respuestaGuardada != null && respuestaGuardada != -1) {
+                if (respuestaGuardada == i) {
+                    rb.setChecked(true);
+                }
+            } else if (i == 0) {
+                // Si es la primera vez que ves esta pregunta, selecciona la primera opción
                 rb.setChecked(true);
+                respuestas.set(preguntaActual, 0); // Guardar automáticamente
             }
         }
 
@@ -154,7 +163,16 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Nueva encuesta", (dialog, which) -> reiniciarEncuesta())
                 .setNegativeButton("Ver historial", (dialog, which) -> {
                     // Abrir historial
-                    Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show();
+                    try {
+                        Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        // Si hay error, muestra mensaje
+                        Toast.makeText(MainActivity.this,
+                                "Error: Historial no disponible aún",
+                                Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 })
                 .show();
     }

@@ -8,7 +8,6 @@ public class PreguntasData {
     public static List<Pregunta> getPreguntas() {
         List<Pregunta> preguntas = new ArrayList<>();
 
-        // Ejemplo de primeras preguntas (adaptas según tu formulario)
         // Pregunta 1
         preguntas.add(new Pregunta(
                 "1. ¿Cuántas frutas consumes al día?",
@@ -44,16 +43,6 @@ public class PreguntasData {
                 new int[]{0, 2, 5, 8}
         ));
 
-        // ... CONTINÚA HASTA PREGUNTA 30
-        // Puedes seguir este patrón. Aquí te pongo un ejemplo rápido de cómo llenar:
-
-        for (int i = 6; i <= 30; i++) {
-            preguntas.add(new Pregunta(
-                    i + ". [Tu pregunta aquí]",
-                    new String[]{"Opción A", "Opción B", "Opción C", "Opción D"},
-                    new int[]{0, 2, 4, 6}
-            ));
-        }
 
         return preguntas;
     }
@@ -63,15 +52,11 @@ public class PreguntasData {
         double porcentaje = (puntajeTotal * 100.0) / maxPuntaje;
 
         if (porcentaje >= 80) {
-            return "EXCELENTE alimentación 🎉🎉🎉";
-        } else if (porcentaje >= 60) {
-            return "BUENA alimentación 👍";
-        } else if (porcentaje >= 40) {
-            return "REGULAR alimentación 😐";
-        } else if (porcentaje >= 20) {
-            return "MALA alimentación ⚠️";
-        } else {
-            return "MUY MALA alimentación ❌ ¡Necesitas ayuda profesional!";
+            return "Alimentación Saludable";
+        } else if (porcentaje >= 50) {
+            return "Necesita Cambios";
+        } else{
+            return "Poco Saludable";
         }
     }
 }
